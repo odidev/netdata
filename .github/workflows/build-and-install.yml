@@ -27,9 +27,9 @@ jobs:
     env:
       img: quay.io/pypa/manylinux2014_aarch64
     steps:
+      - uses: docker/setup-qemu-action@v1
       - name: Git clone repository
         uses: actions/checkout@v2
-        uses: docker/setup-qemu-action@v1
         with:
           submodules: recursive
       - run: |
