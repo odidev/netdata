@@ -21,6 +21,30 @@ jobs:
       - name: Build
         run: |
           .github/scripts/build-static-x86_64.sh
+  static-build_arm64:
+    name: Build (aarch_64)
+    runs-on: ubuntu-latest
+    env:
+      img: quay.io/pypa/manylinux2014_aarch64
+    steps:
+      - name: Git clone repository
+        uses: actions/checkout@v2
+        uses: docker/setup-qemu-action@v1
+        with:
+          submodules: recursive
+      - run: |
+          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+          ${{ env.img }} \
+          bash -exc '${{ env.py }} -m pip install virtualenv && ${{ env.py }} -m venv .env && \
+          source .env/bin/activate && \
+          git fetch --prune --unshallow --tags
+      - name: Build
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+          ${{ env.img }} \
+          bash -exc '${{ env.py }} -m pip install virtualenv && ${{ env.py }} -m venv .env && \
+          source .env/bin/activate && \
+          .github/scripts/build-static-x86_64.sh
   source-build:
     name: Build & Install
     strategy:
