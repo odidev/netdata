@@ -25,6 +25,7 @@ jobs:
     name: Build (aarch_64)
     runs-on: ubuntu-latest
     env:
+      py: /opt/python/${{ matrix.python-version }}/bin/python
       img: quay.io/pypa/manylinux2014_aarch64
     steps:
       - uses: docker/setup-qemu-action@v1
